@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://flc3divxdgm8"]
+
+[node name="CameraController" type="SpringArm3D"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.6, 0)
+spring_length = 5.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+current = true
