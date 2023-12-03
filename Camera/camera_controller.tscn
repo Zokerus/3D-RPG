@@ -2,10 +2,12 @@
 
 [ext_resource type="Script" path="res://Camera/camera_controller.cs" id="1_n515j"]
 
-[node name="CameraController" type="SpringArm3D"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.6, 0)
-spring_length = 5.0
+[node name="CameraController" type="Node3D"]
 script = ExtResource("1_n515j")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="SpringArm3D" type="SpringArm3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+spring_length = 5.0
+
+[node name="Camera3D" type="Camera3D" parent="SpringArm3D"]
 current = true
