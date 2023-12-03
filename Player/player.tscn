@@ -1,4 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://vcq2j7yygxsg"]
+[gd_scene load_steps=5 format=3 uid="uid://vcq2j7yygxsg"]
+
+[ext_resource type="Script" path="res://Player/player.cs" id="1_btifx"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_gqsfr"]
 
@@ -7,6 +9,7 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nufa2"]
 
 [node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_btifx")
 
 [node name="Body" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
