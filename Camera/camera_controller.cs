@@ -23,8 +23,8 @@ public partial class camera_controller : Node3D
         base._UnhandledInput(@event);
         if (@event is InputEventMouseMotion mouseMotion)
         {
-            this.RotateY(mouseMotion.Relative.X * sensitity);
-            m_springArm3D.RotateX(mouseMotion.Relative.Y * sensitity);
+            this.RotateY(-mouseMotion.Relative.X * sensitity);
+            m_springArm3D.RotateX(-mouseMotion.Relative.Y * sensitity);
             m_springArm3D.Rotation = new Vector3(Mathf.Clamp(m_springArm3D.Rotation.X, -Mathf.Pi * 0.25f, Mathf.Pi * 0.25f), m_springArm3D.Rotation.Y, m_springArm3D.Rotation.Z);
         }
     }
