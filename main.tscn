@@ -10,7 +10,7 @@ script = ExtResource("1_nol88")
 
 [node name="TestLevel" parent="." instance=ExtResource("1_bkj5s")]
 
-[node name="Player" parent="." instance=ExtResource("2_df4vu")]
+[node name="Player" parent="." node_paths=PackedStringArray("mainCamera") instance=ExtResource("2_df4vu")]
+mainCamera = NodePath("CameraController")
 
 [node name="CameraController" parent="Player" instance=ExtResource("3_5wbq8")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)

@@ -16,7 +16,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_gqsfr")
 
 [node name="Nose" type="MeshInstance3D" parent="Body"]
-transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, -0.5, 0, 0.5, -2.18557e-08, 0, 0.5, 0.55)
+transform = Transform3D(0.499999, -0.000975582, -8.9363e-05, 8.96985e-05, 0.000172966, 0.5, -0.000975551, -0.499999, 0.00017314, 0, 0.5, -0.55)
 mesh = SubResource("PrismMesh_aaj3j")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
