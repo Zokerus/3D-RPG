@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
 public partial class player : CharacterBody3D
 {
@@ -36,7 +37,10 @@ public partial class player : CharacterBody3D
 		{
 			velocity.X = direction.X * Speed;
 			velocity.Z = direction.Z * Speed;
-			rota
+			float rotationAngle = Transform.Basis.Z.SignedAngleTo(mainCamera.Transform.Basis.Z, Vector3.Up);
+			Debug.Print(rotationAngle.ToString());
+            RotateY(rotationAngle);
+			//RotateY(Mathf.LerpAngle(Rotation.Y, ))
 		}
 		else
 		{
@@ -57,5 +61,6 @@ public partial class player : CharacterBody3D
 
 		Velocity = velocity;
 		MoveAndSlide();
+		mainCamera.GlobalPosition = this.GlobalPosition;
 	}
 }

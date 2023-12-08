@@ -11,6 +11,6 @@ script = ExtResource("1_nol88")
 [node name="TestLevel" parent="." instance=ExtResource("1_bkj5s")]
 
 [node name="Player" parent="." node_paths=PackedStringArray("mainCamera") instance=ExtResource("2_df4vu")]
-mainCamera = NodePath("CameraController")
+mainCamera = NodePath("../CameraController")
 
-[node name="CameraController" parent="Player" instance=ExtResource("3_5wbq8")]
+[node name="CameraController" parent="." instance=ExtResource("3_5wbq8")]
