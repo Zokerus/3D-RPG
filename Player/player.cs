@@ -8,6 +8,7 @@ public partial class player : CharacterBody3D
 	public camera_controller mainCamera;
 
 	public const float Speed = 5.0f;
+	public const float characterRotationRate = 3*Mathf.Pi;
 	public const float JumpVelocity = 4.5f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -37,10 +38,6 @@ public partial class player : CharacterBody3D
 		{
 			velocity.X = direction.X * Speed;
 			velocity.Z = direction.Z * Speed;
-			float rotationAngle = Transform.Basis.Z.SignedAngleTo(mainCamera.Transform.Basis.Z, Vector3.Up);
-			Debug.Print(rotationAngle.ToString());
-            RotateY(rotationAngle);
-			//RotateY(Mathf.LerpAngle(Rotation.Y, ))
 		}
 		else
 		{
@@ -59,7 +56,13 @@ public partial class player : CharacterBody3D
 		if (!IsOnFloor())
 			velocity.Y -= gravity * (float)delta;
 
-		Velocity = velocity;
+		if (velocity.X != 0.0f || velocity.Z != 0.0f)
+		{
+			float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(mainCamera.Transform.Basis.Z, Vector3.Up);
+			this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(characterRotationRate * (float)delta, Mathf.Abs(rotationAngle)));
+		}
+
+        Velocity = velocity;
 		MoveAndSlide();
 		mainCamera.GlobalPosition = this.GlobalPosition;
 	}
