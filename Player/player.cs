@@ -36,8 +36,9 @@ public partial class player : CharacterBody3D
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 inputDir = Input.GetVector("Left", "Right", "Forward", "Backward");
+		Vector2 inputDir = Input.GetVector("Left", "Right", "Backward", "Forward");
 		m_animationTree.Set("parameters/Locomotion/blend_position", inputDir);
+		Debug.Print(inputDir.ToString());
 		//Vector3 direction = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		//if (direction != Vector3.Zero)
 		//{
@@ -61,7 +62,8 @@ public partial class player : CharacterBody3D
 		if (!IsOnFloor())
 			velocity.Y -= m_gravity * (float)delta;
 
-		if (velocity.X != 0.0f || velocity.Z != 0.0f)
+		//if (velocity.X != 0.0f || velocity.Z != 0.0f)
+		if ((Vector2)m_animationTree.Get("parameters/Locomotion/blend_position") != Vector2.Zero)
 		{
 			float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(mainCamera.Transform.Basis.Z, Vector3.Up);
 			this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * (float)delta, Mathf.Abs(rotationAngle)));
