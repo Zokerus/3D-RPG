@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://Camera/camera_controller.cs" id="1_n515j"]
 
 [node name="CameraController" type="Node3D"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 script = ExtResource("1_n515j")
 
 [node name="SpringArm3D" type="SpringArm3D" parent="."]
