@@ -7,9 +7,9 @@ public partial class player : CharacterBody3D
 	[Export]
 	public camera_controller mainCamera;
 
-	public const float Speed = 5.0f;
-	public const float characterRotationRate = 3*Mathf.Pi;
-	public const float JumpVelocity = 4.5f;
+	private const float Speed = 5.0f;
+	private const float characterRotationRate = 3*Mathf.Pi;
+	private const float JumpVelocity = 4.5f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
