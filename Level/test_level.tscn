@@ -1,6 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5mpt4vi8s63k"]
+[gd_scene load_steps=8 format=3 uid="uid://c5mpt4vi8s63k"]
 
-[ext_resource type="Material" uid="uid://dutlxsep535si" path="res://Materials/grass.tres" id="1_afxx7"]
+[ext_resource type="Texture2D" uid="uid://fh7srjtte2yi" path="res://Imports/Level Prototype Textures/PNG/Dark/texture_01.png" id="1_04ibp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e30px"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -18,6 +18,9 @@ glow_enabled = true
 [sub_resource type="PlaneMesh" id="PlaneMesh_hfp2u"]
 size = Vector2(30, 30)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j52dd"]
+albedo_texture = ExtResource("1_04ibp")
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_monm0"]
 size = Vector3(30, 0.1, 30)
 
@@ -32,7 +35,7 @@ environment = SubResource("Environment_evqxb")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_hfp2u")
-surface_material_override/0 = ExtResource("1_afxx7")
+surface_material_override/0 = SubResource("StandardMaterial3D_j52dd")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
