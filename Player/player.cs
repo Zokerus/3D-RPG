@@ -9,7 +9,9 @@ public partial class player : CharacterBody3D
 
 	private AnimationTree m_animationTree;
 
-	private const float m_speed = 5.0f;
+    private Vector3 m_movementDirection = Vector3.Zero;
+
+    private const float m_speed = 5.0f;
 	private const float m_characterRotationRate = 3*Mathf.Pi;
 	private const float m_jumpVelocity = 4.5f;
 
@@ -34,24 +36,12 @@ public partial class player : CharacterBody3D
 		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
 			velocity.Y = m_jumpVelocity;
 
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 inputDir = Input.GetVector("Left", "Right", "Backward", "Forward");
-		m_animationTree.Set("parameters/Locomotion/blend_position", inputDir);
-		Debug.Print(inputDir.ToString());
-		//Vector3 direction = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-		//if (direction != Vector3.Zero)
-		//{
-		//	velocity.X = direction.X * m_speed;
-		//	velocity.Z = direction.Z * m_speed;
-		//}
-		//else
-		//{
-		//	velocity.X = Mathf.MoveToward(Velocity.X, 0, m_speed);
-		//	velocity.Z = Mathf.MoveToward(Velocity.Z, 0, m_speed);
-		//}
+        // Get the input direction and handle the movement/deceleration.
+        Vector2 inputDir = Input.GetVector("Left", "Right", "Forward", "Backward");
+        m_movementDirection = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        m_animationTree.Set("parameters/Movement/blend_amount", -1 + inputDir.Length()); //Input.GetVector ist by default limited to the length of 1
 
-		Velocity = velocity;
+        Velocity = velocity;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -62,15 +52,30 @@ public partial class player : CharacterBody3D
 		if (!IsOnFloor())
 			velocity.Y -= m_gravity * (float)delta;
 
-		//if (velocity.X != 0.0f || velocity.Z != 0.0f)
-		if ((Vector2)m_animationTree.Get("parameters/Locomotion/blend_position") != Vector2.Zero)
+		//Rotate the Player according to camera rotation and movement direction (input)
+		if (m_movementDirection != Vector3.Zero)
 		{
-			float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(mainCamera.Transform.Basis.Z, Vector3.Up);
+			float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_movementDirection, Vector3.Up);
 			this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * (float)delta, Mathf.Abs(rotationAngle)));
 		}
+
+		// Get position change based an animation (root motion)
+        Quaternion currentRotation = Transform.Basis.GetRotationQuaternion();
+        velocity = DivideByFloat(currentRotation.Normalized() * m_animationTree.GetRootMotionPosition(), (float)delta);
 
         Velocity = velocity;
 		MoveAndSlide();
 		mainCamera.GlobalPosition = this.GlobalPosition;
 	}
+
+    /// <summary>
+    /// Divide a Vector3 by a scalar of type float
+    /// </summary>
+    /// <param name="left">Vector3 parameter</param>
+    /// <param name="right">float scalar parameter</param>
+    /// <returns>New Vector3 left/right</returns>
+    private Vector3 DivideByFloat(Vector3 left, float right)
+    {
+        return new Vector3(left.X / right, left.Y / right, left.Z / right);
+    }
 }
