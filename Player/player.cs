@@ -17,6 +17,7 @@ public partial class player : CharacterBody3D
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	private float m_gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+	private bool m_runFactor = false;
 
     public override void _Ready()
     {
@@ -28,18 +29,24 @@ public partial class player : CharacterBody3D
 		m_animationTree = GetNode<AnimationTree>("AnimationTree");
     }
 
-    public override void _UnhandledInput(InputEvent @event)
-	{
+    public override void _UnhandledKeyInput(InputEvent @event)
+    {
 		Vector3 velocity = Velocity;
 
 		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
+		if (@event.IsActionPressed("Jump") && IsOnFloor())
 			velocity.Y = m_jumpVelocity;
 
-        // Get the input direction and handle the movement/deceleration.
-        Vector2 inputDir = Input.GetVector("Left", "Right", "Forward", "Backward");
-        m_movementDirection = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-        m_animationTree.Set("parameters/Movement/blend_amount", -1 + inputDir.Length()); //Input.GetVector ist by default limited to the length of 1
+
+        if (@event.IsActionPressed("Run", true) && IsOnFloor() && m_movementDirection != Vector3.Zero)
+        {
+            m_runFactor = true;
+        }
+        else
+        {
+            m_runFactor = false;
+        }
+		
 
         Velocity = velocity;
 	}
@@ -52,14 +59,9 @@ public partial class player : CharacterBody3D
 		if (!IsOnFloor())
 			velocity.Y -= m_gravity * (float)delta;
 
-		//Rotate the Player according to camera rotation and movement direction (input)
-		if (m_movementDirection != Vector3.Zero)
-		{
-			float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_movementDirection, Vector3.Up);
-			this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * (float)delta, Mathf.Abs(rotationAngle)));
-		}
+        CalculateMovement((float)delta);
 
-		// Get position change based an animation (root motion)
+        // Get position change based an animation (root motion)
         Quaternion currentRotation = Transform.Basis.GetRotationQuaternion();
         velocity = DivideByFloat(currentRotation.Normalized() * m_animationTree.GetRootMotionPosition(), (float)delta);
 
@@ -67,6 +69,30 @@ public partial class player : CharacterBody3D
 		MoveAndSlide();
 		mainCamera.GlobalPosition = this.GlobalPosition;
 	}
+
+	private void CalculateMovement(float delta)
+	{
+        // Get the input direction and handle the movement/deceleration.
+        Vector2 inputDir = Input.GetVector("Left", "Right", "Forward", "Backward");
+        m_movementDirection = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+
+        //Rotate the Player according to camera rotation and movement direction (input)
+        if (m_movementDirection != Vector3.Zero)
+        {
+            float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_movementDirection, Vector3.Up);
+            this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * (float)delta, Mathf.Abs(rotationAngle)));
+        }
+
+        if (m_movementDirection != Vector3.Zero && m_runFactor && IsOnFloor())
+        {
+            m_animationTree.Set("parameters/Movement/blend_amount", 1); //Blend Value of 1 equals running
+        }
+
+        else
+        {
+            m_animationTree.Set("parameters/Movement/blend_amount", -1 + inputDir.Length()); //Input.GetVector ist by default limited to the length of 1
+        }
+    }
 
     /// <summary>
     /// Divide a Vector3 by a scalar of type float

@@ -15,7 +15,6 @@ public partial class camera_controller : Node3D
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        base._UnhandledInput(@event);
         if (@event is InputEventMouseMotion mouseMotion)
         {
             this.RotateY(-mouseMotion.Relative.X * sensitity);
