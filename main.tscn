@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://d2pkt3e6r0mc2"]
+[gd_scene load_steps=6 format=3 uid="uid://d2pkt3e6r0mc2"]
 
 [ext_resource type="PackedScene" uid="uid://c5mpt4vi8s63k" path="res://Level/test_level.tscn" id="1_bkj5s"]
 [ext_resource type="Script" path="res://main.cs" id="1_nol88"]
 [ext_resource type="PackedScene" uid="uid://vcq2j7yygxsg" path="res://Player/player.tscn" id="2_df4vu"]
 [ext_resource type="PackedScene" uid="uid://flc3divxdgm8" path="res://Camera/camera_controller.tscn" id="3_5wbq8"]
+[ext_resource type="PackedScene" uid="uid://cjcxti15a7kwl" path="res://Enemies/Bandit/bandit.tscn" id="5_k72ix"]
 
 [node name="main" type="Node3D"]
 script = ExtResource("1_nol88")
@@ -15,3 +16,6 @@ mainCamera = NodePath("../CameraController")
 
 [node name="CameraController" parent="." instance=ExtResource("3_5wbq8")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="Bandit" parent="." instance=ExtResource("5_k72ix")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 9)
