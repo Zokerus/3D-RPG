@@ -1,8 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://k4yoxhr6nyes"]
+[gd_scene load_steps=3 format=3 uid="uid://k4yoxhr6nyes"]
+
+[ext_resource type="Script" path="res://Components/Detection/detection_area.cs" id="1_3dgka"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_x76rr"]
 
 [node name="DetectionArea" type="Area3D"]
+script = ExtResource("1_3dgka")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_x76rr")
+
+[connection signal="body_entered" from="." to="." method="_On_Body_Entered"]
+[connection signal="body_exited" from="." to="." method="_On_Body_Exited"]

@@ -1,13 +1,9 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
 public partial class bandit : CharacterBody3D
 {
-	[Export]
-	public float detectionAngle = 60.0f;
-	[Export]
-	public float detectionDistance = 10.0f;
-
 	private const float Speed = 5.0f;
 	private const float JumpVelocity = 4.5f;
 
@@ -16,9 +12,7 @@ public partial class bandit : CharacterBody3D
 
     public override void _Ready()
     {
-		Draw3D draw = new Draw3D();
-		AddChild(draw);	
-		draw.sector(Vector3.Zero, new Vector3(0, 0, 1), detectionDistance, detectionAngle, Colors.Red);
+        Debug.Print((new Vector3(0, 0, 1) * Transform.Basis).ToString());
     }
 
     public override void _PhysicsProcess(double delta)
@@ -50,10 +44,5 @@ public partial class bandit : CharacterBody3D
 
 		Velocity = velocity;
 		MoveAndSlide();
-	}
-
-	private void LookForPlayer()
-	{
-
 	}
 }
