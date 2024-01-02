@@ -15,7 +15,6 @@ script = ExtResource("1_nol88")
 mainCamera = NodePath("../CameraController")
 
 [node name="CameraController" parent="." instance=ExtResource("3_5wbq8")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Bandit" parent="." instance=ExtResource("5_k72ix")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -9)
