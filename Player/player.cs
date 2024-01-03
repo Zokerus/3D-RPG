@@ -75,7 +75,6 @@ public partial class player : CharacterBody3D
         // Get the input direction and handle the movement/deceleration.
         Vector2 inputDir = Input.GetVector("Left", "Right", "Forward", "Backward");
         m_movementDirection = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-        Debug.Print(m_movementDirection.ToString());
 
         //Rotate the Player according to camera rotation and movement direction (input)
         if (m_movementDirection != Vector3.Zero)

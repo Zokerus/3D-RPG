@@ -18,13 +18,13 @@ public partial class detection_area : Area3D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		parentBody = GetParentNode3D();
         Draw3D draw = new Draw3D();
         AddChild(draw);
-        draw.sector(Vector3.Zero, new Vector3(0, 0, 0.1f), detectionRadius, detectionAngle, Colors.Red);
+        draw.sector(Vector3.Zero, -Vector3.Forward, detectionRadius, detectionAngle, Colors.Red);
 		collisionShape = GetNode<CollisionShape3D>("CollisionShape3D");
         SphereShape3D sphere = collisionShape.Shape as SphereShape3D;
 		sphere.Radius = detectionRadius;
-		parentBody = GetParentNode3D();
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,9 +38,9 @@ public partial class detection_area : Area3D
 	public void _On_Body_Entered(Node3D body)
 	{
 		Vector3 toBody = body.GlobalPosition - this.GlobalPosition;
-		Debug.Print(toBody.ToString());
-		Debug.Print(new Vector3(0, 0, 1).Dot(toBody.Normalized()).ToString());
-		Debug.Print(Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)).ToString());
+		//Debug.Print(toBody.ToString());
+		//Debug.Print(new Vector3(0, 0, 1).Dot(toBody.Normalized()).ToString());
+		//Debug.Print(Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)).ToString());
 		if (new Vector3(0,0,1).Dot(toBody.Normalized()) > Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)))
 		{
 			Debug.Print("Body entered");

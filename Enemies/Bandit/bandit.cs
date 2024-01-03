@@ -12,7 +12,7 @@ public partial class bandit : CharacterBody3D
 
     public override void _Ready()
     {
-        Debug.Print((new Vector3(0, 0, 1) * Transform.Basis).ToString());
+        
     }
 
     public override void _PhysicsProcess(double delta)
