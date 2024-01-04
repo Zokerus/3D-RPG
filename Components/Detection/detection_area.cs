@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 public partial class detection_area : Area3D
@@ -15,10 +16,13 @@ public partial class detection_area : Area3D
 	private CollisionShape3D collisionShape;
 	private Node3D parentBody;
 
+	private List<Node3D> bodyList;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		parentBody = GetParentNode3D();
+		bodyList = new List<Node3D>();
         Draw3D draw = new Draw3D();
         AddChild(draw);
         draw.sector(Vector3.Zero, -Vector3.Forward, detectionRadius, detectionAngle, Colors.Red);
@@ -30,21 +34,32 @@ public partial class detection_area : Area3D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		for(int i = 0;  i < bodyList.Count; i++) 
+		{
+            Vector3 toBody = bodyList[i].GlobalPosition - this.GlobalPosition;
+            //Debug.Print(toBody.ToString());
+            //Debug.Print(GlobalTransform.Basis.Z.Dot(toBody.Normalized()).ToString());
+            //Debug.Print(Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)).ToString());
+            if (GlobalTransform.Basis.Z.Dot(toBody.Normalized()) > Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)))
+            {
+                Debug.Print("Body in FOV");
+            }
+			else
+			{
+                Debug.Print("Body left");
+            }
+        }
 	}
+
 	/// <summary>
 	/// Body entered area3D, yet not visible or detected
 	/// </summary>
 	/// <param name="body">Entering Body</param>
 	public void _On_Body_Entered(Node3D body)
 	{
-		Vector3 toBody = body.GlobalPosition - this.GlobalPosition;
-		//Debug.Print(toBody.ToString());
-		//Debug.Print(new Vector3(0, 0, 1).Dot(toBody.Normalized()).ToString());
-		//Debug.Print(Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)).ToString());
-		if (new Vector3(0,0,1).Dot(toBody.Normalized()) > Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)))
-		{
-			Debug.Print("Body entered");
-		}
+		// add only enemies to the list
+		if (body != null && body != parentBody)
+			bodyList.Add(body);
 	}
 	/// <summary>
 	/// Body left the area3D
@@ -52,6 +67,6 @@ public partial class detection_area : Area3D
 	/// <param name="body"></param>
 	public void _On_Body_Exited(Node3D body) 
 	{
-        Debug.Print("Body exited");
+        bodyList.Remove(body);
     }
 }
