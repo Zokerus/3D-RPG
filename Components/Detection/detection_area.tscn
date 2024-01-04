@@ -12,5 +12,11 @@ script = ExtResource("1_3dgka")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_x76rr")
 
+[node name="RayCast3D" type="RayCast3D" parent="."]
+enabled = false
+target_position = Vector3(0, 0, 1)
+collision_mask = 15
+debug_shape_custom_color = Color(0.658824, 0.658824, 0.658824, 1)
+
 [connection signal="body_entered" from="." to="." method="_On_Body_Entered"]
 [connection signal="body_exited" from="." to="." method="_On_Body_Exited"]

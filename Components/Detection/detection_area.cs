@@ -13,40 +13,47 @@ public partial class detection_area : Area3D
 	Signal bodyEntered;
 	Signal bodyExited;
 
-	private CollisionShape3D collisionShape;
-	private Node3D parentBody;
+	private CollisionShape3D m_collisionShape;
+	private RayCast3D m_rayCast;
+	private Node3D m_parentBody;
 
 	private List<Node3D> bodyList;
+	
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		parentBody = GetParentNode3D();
+		m_parentBody = GetParentNode3D();
 		bodyList = new List<Node3D>();
+		m_rayCast = GetNode<RayCast3D>("RayCast3D");
         Draw3D draw = new Draw3D();
         AddChild(draw);
         draw.sector(Vector3.Zero, -Vector3.Forward, detectionRadius, detectionAngle, Colors.Red);
-		collisionShape = GetNode<CollisionShape3D>("CollisionShape3D");
-        SphereShape3D sphere = collisionShape.Shape as SphereShape3D;
+		m_rayCast.TargetPosition = -Vector3.Forward * detectionRadius;
+		m_collisionShape = GetNode<CollisionShape3D>("CollisionShape3D");
+        SphereShape3D sphere = m_collisionShape.Shape as SphereShape3D;
 		sphere.Radius = detectionRadius;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		for(int i = 0;  i < bodyList.Count; i++) 
 		{
-            Vector3 toBody = bodyList[i].GlobalPosition - this.GlobalPosition;
-            //Debug.Print(toBody.ToString());
-            //Debug.Print(GlobalTransform.Basis.Z.Dot(toBody.Normalized()).ToString());
-            //Debug.Print(Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)).ToString());
+            Vector3 toBody = bodyList[i].GetNode<CollisionShape3D>("CollisionShape3D").GlobalPosition - this.GlobalPosition;
             if (GlobalTransform.Basis.Z.Dot(toBody.Normalized()) > Mathf.Cos(Mathf.DegToRad(detectionAngle * 0.5f)))
             {
-                Debug.Print("Body in FOV");
-            }
-			else
-			{
-                Debug.Print("Body left");
+				m_rayCast.Enabled = true;
+				m_rayCast.TargetPosition = m_parentBody.Transform.Basis * toBody;
+				if (m_rayCast.IsColliding()) 
+				{
+					Node3D body = (Node3D)m_rayCast.GetCollider();
+					if (body == bodyList[i])
+					{
+                        Debug.Print("Body in FOV");
+                    }
+				}
+				
             }
         }
 	}
@@ -58,7 +65,7 @@ public partial class detection_area : Area3D
 	public void _On_Body_Entered(Node3D body)
 	{
 		// add only enemies to the list
-		if (body != null && body != parentBody)
+		if (body != null && body != m_parentBody)
 			bodyList.Add(body);
 	}
 	/// <summary>
