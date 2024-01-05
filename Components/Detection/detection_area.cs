@@ -10,12 +10,12 @@ public partial class detection_area : Area3D
 	[Export]
 	public float detectionAngle = 100;
 
-	Signal bodyEntered;
-	Signal bodyExited;
+	[Signal]
+	public delegate void TargetDetectedEventHandler(Node3D taget);
 
 	private CollisionShape3D m_collisionShape;
-	private RayCast3D m_rayCast;
 	private Node3D m_parentBody;
+	private RayCast3D m_rayCast;
 
 	private List<Node3D> bodyList;
 	
@@ -50,7 +50,7 @@ public partial class detection_area : Area3D
 					Node3D body = (Node3D)m_rayCast.GetCollider();
 					if (body == bodyList[i])
 					{
-                        Debug.Print("Body in FOV");
+						EmitSignal(SignalName.TargetDetected, body);
                     }
 				}
 				
