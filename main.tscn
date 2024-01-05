@@ -12,17 +12,11 @@ script = ExtResource("1_nol88")
 [node name="TestLevel" parent="." instance=ExtResource("1_bkj5s")]
 
 [node name="Player" parent="." node_paths=PackedStringArray("mainCamera") instance=ExtResource("2_df4vu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.44171)
 mainCamera = NodePath("../CameraController")
 
 [node name="CameraController" parent="." instance=ExtResource("3_5wbq8")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Bandit" parent="." instance=ExtResource("5_k72ix")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 9)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0164795, 1.30103, 3.339)
-use_collision = true
-collision_layer = 2
-collision_mask = 0
-size = Vector3(3.3938, 2.60205, 1)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 13)
