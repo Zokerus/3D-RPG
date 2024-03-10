@@ -12,12 +12,14 @@ public partial class player : CharacterBody3D
     private Vector3 m_movementDirection = Vector3.Zero;
 
     private const float m_speed = 5.0f;
-	private const float m_characterRotationRate = 3*Mathf.Pi;
+	private const float m_characterRotationRate = 4*Mathf.Pi;
 	private const float m_jumpVelocity = 4.5f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	private float m_gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private bool m_runFactor = false;
+    private bool m_completeTurn = false;
+    private Vector3 m_targetLookDirection = Vector3.Zero;
 
     public override void _Ready()
     {
@@ -79,18 +81,33 @@ public partial class player : CharacterBody3D
         //Rotate the Player according to camera rotation and movement direction (input)
         if (m_movementDirection != Vector3.Zero)
         {
-            float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_movementDirection, Vector3.Up);
+            m_targetLookDirection = m_movementDirection;
+            float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_targetLookDirection, Vector3.Up);
             this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * (float)delta, Mathf.Abs(rotationAngle)));
+            m_completeTurn = true;
+        }
+        else
+        {
+            if (m_completeTurn) 
+            {
+                float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_targetLookDirection, Vector3.Up);
+                this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * 2 * (float)delta, Mathf.Abs(rotationAngle)));
+                m_animationTree.Set("parameters/TurnOnSpot/blend_amount", 1);
+                if (Mathf.Abs(rotationAngle) < 0.01f)
+                { 
+                    m_completeTurn = false;
+                    m_animationTree.Set("parameters/TurnOnSpot/blend_amount", 0);
+                }
+            }
         }
 
         if (m_movementDirection != Vector3.Zero && m_runFactor && IsOnFloor())
         {
             m_animationTree.Set("parameters/Movement/blend_amount", 1); //Blend Value of 1 equals running
         }
-
         else
         {
-            m_animationTree.Set("parameters/Movement/blend_amount", -1 + inputDir.Length()); //Input.GetVector ist by default limited to the length of 1
+            m_animationTree.Set("parameters/Movement/blend_amount", -1 + inputDir.Length()); //Input.GetVector is by default limited to the length of 1
         }
     }
 

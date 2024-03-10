@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://fh7srjtte2yi" path="res://Imports/Level Prototype Textures/PNG/Dark/texture_01.png" id="1_04ibp"]
 [ext_resource type="Texture2D" uid="uid://r1u5nsls1aw3" path="res://Imports/Level Prototype Textures/PNG/Orange/texture_01.png" id="2_8ngri"]
+[ext_resource type="NavigationMesh" uid="uid://dolqsl5ra3vwj" path="res://Level/test_level.tres" id="2_l16fe"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e30px"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -15,12 +16,6 @@ background_mode = 2
 sky = SubResource("Sky_gdsk2")
 tonemap_mode = 2
 glow_enabled = true
-
-[sub_resource type="NavigationMesh" id="NavigationMesh_71bpm"]
-vertices = PackedVector3Array(-14.5, 0.5, -14.5, -14.5, 0.5, 14.5, 14.5, 0.5, 14.5, 14.5, 0.5, -14.5)
-polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
-agent_height = 2.0
-agent_max_slope = 30.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hfp2u"]
 size = Vector2(30, 30)
@@ -43,19 +38,23 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_evqxb")
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
-navigation_mesh = SubResource("NavigationMesh_71bpm")
-
-[node name="Ground" type="StaticBody3D" parent="NavigationRegion3D"]
+[node name="Ground" type="StaticBody3D" parent="."]
 collision_mask = 15
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Ground"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
 mesh = SubResource("PlaneMesh_hfp2u")
 surface_material_override/0 = SubResource("StandardMaterial3D_j52dd")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Ground"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
 shape = SubResource("BoxShape3D_monm0")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = ExtResource("2_l16fe")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D"]
+mesh = SubResource("PlaneMesh_hfp2u")
+surface_material_override/0 = SubResource("StandardMaterial3D_j52dd")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0164795, 1.30103, 6.339)
@@ -66,3 +65,7 @@ collision_layer = 2
 collision_mask = 0
 size = Vector3(3.3938, 2.60205, 1)
 material = SubResource("StandardMaterial3D_hn4xq")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+size = Vector3(0.5, 0.5, 0.5)
