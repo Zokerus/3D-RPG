@@ -60,10 +60,11 @@ surface_material_override/0 = SubResource("StandardMaterial3D_j52dd")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0164795, 1.30103, 6.339)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="NavigationObstacle3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0140989, 0, 0)
 use_collision = true
 collision_layer = 2
 collision_mask = 0
-size = Vector3(3.3938, 2.60205, 1)
+size = Vector3(7.26892, 2.60205, 1)
 material = SubResource("StandardMaterial3D_hn4xq")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]

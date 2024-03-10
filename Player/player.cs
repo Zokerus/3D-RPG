@@ -11,13 +11,12 @@ public partial class player : CharacterBody3D
 
     private Vector3 m_movementDirection = Vector3.Zero;
 
-    private const float m_speed = 5.0f;
 	private const float m_characterRotationRate = 4*Mathf.Pi;
 	private const float m_jumpVelocity = 4.5f;
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	private float m_gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-	private bool m_runFactor = false;
+	private bool m_walkFactor = false;
     private bool m_completeTurn = false;
     private Vector3 m_targetLookDirection = Vector3.Zero;
 
@@ -42,11 +41,11 @@ public partial class player : CharacterBody3D
 
         if (@event.IsActionPressed("Run", true) && IsOnFloor() && m_movementDirection != Vector3.Zero)
         {
-            m_runFactor = true;
+            m_walkFactor = true;
         }
         else
         {
-            m_runFactor = false;
+            m_walkFactor = false;
         }
 		
 
@@ -101,9 +100,9 @@ public partial class player : CharacterBody3D
             }
         }
 
-        if (m_movementDirection != Vector3.Zero && m_runFactor && IsOnFloor())
+        if (m_movementDirection != Vector3.Zero && m_walkFactor && IsOnFloor())
         {
-            m_animationTree.Set("parameters/Movement/blend_amount", 1); //Blend Value of 1 equals running
+            m_animationTree.Set("parameters/Movement/blend_amount", 1); //Blend Value of 1 equals walking
         }
         else
         {
