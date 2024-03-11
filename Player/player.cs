@@ -144,7 +144,6 @@ public partial class player : CharacterBody3D
                     closestToHorizontalCenter = Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X);
                     m_lockedTarget = m_targetList[i];
                 }
-                Debug.Print((GetViewport().GetVisibleRect().Size.X / 2.0f).ToString());
             }
         }
         
