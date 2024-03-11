@@ -10,7 +10,7 @@ void vertex() {
 	// Called for every vertex the material is visible on.
 	if(enable == true)
 	{
-		VERTEX += VERTEX * border_width;
+		VERTEX += NORMAL * border_width;
 	}
 }
 
