@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 public partial class player : CharacterBody3D
@@ -19,6 +20,8 @@ public partial class player : CharacterBody3D
 	private bool m_walkFactor = false;
     private bool m_completeTurn = false;
     private Vector3 m_targetLookDirection = Vector3.Zero;
+    private List<Area3D> m_targetList = new List<Area3D>();
+    private Area3D m_lockedTarget = null;
 
     public override void _Ready()
     {
@@ -48,6 +51,10 @@ public partial class player : CharacterBody3D
             m_walkFactor = false;
         }
 		
+        if(@event.IsActionPressed("LockTarget"))
+        {
+            LockOnTarget();
+        }
 
         Velocity = velocity;
 	}
@@ -119,5 +126,38 @@ public partial class player : CharacterBody3D
     private Vector3 DivideByFloat(Vector3 left, float right)
     {
         return new Vector3(left.X / right, left.Y / right, left.Z / right);
+    }
+
+    private void LockOnTarget()
+    {
+        float closestToHorizontalCenter = float.MaxValue;
+        m_lockedTarget = null;
+        for (int i = 0; i < m_targetList.Count; i++)
+        {
+            if (mainCamera.Camera.IsPositionInFrustum(m_targetList[i].GlobalPosition))
+            {
+                Vector2 screenCoords = mainCamera.Camera.UnprojectPosition(m_targetList[i].GlobalPosition);
+                if (Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X) < closestToHorizontalCenter)
+                {
+                    closestToHorizontalCenter = Mathf.Abs(GetViewport().GetVisibleRect().Size.X / 2.0f);
+                    m_lockedTarget = m_targetList[i];
+                }
+            }
+        }
+        
+        if (m_lockedTarget != null) 
+        {
+            Debug.Print(m_lockedTarget.ToString());
+        }
+    }
+
+    public void AddBanditToList(Area3D enemy)
+    {
+        m_targetList.Add(enemy);
+    }
+
+    public void RemoveBanditFromList(Area3D enemy)
+    {
+        m_targetList.Remove(enemy);
     }
 }
