@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using static Godot.WebSocketPeer;
 
 public partial class LockOnComponent : Area3D
 {
@@ -11,11 +12,19 @@ public partial class LockOnComponent : Area3D
 	{
 	}
 
-	public void LockTarget(bool state)
+	public void LockTarget()
 	{
 		if (highlightComponent != null) 
 		{ 
-			highlightComponent.Enable(state);
+			highlightComponent.Enable(true);
 		}
 	}
+
+	public void UnlockTarget()
+	{
+        if (highlightComponent != null)
+        {
+            highlightComponent.Enable(false);
+        }
+    }
 }

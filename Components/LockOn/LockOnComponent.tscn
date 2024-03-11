@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cetbuff2e7uo7"]
+[gd_scene load_steps=3 format=3 uid="uid://cetbuff2e7uo7"]
+
+[ext_resource type="Script" path="res://Components/LockOn/LockOnComponent.cs" id="1_qdfyb"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_spact"]
 radius = 20.0
@@ -8,6 +10,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3164, 0)
 collision_layer = 256
 collision_mask = 0
 monitoring = false
+script = ExtResource("1_qdfyb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_spact")

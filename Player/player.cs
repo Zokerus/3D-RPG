@@ -22,8 +22,8 @@ public partial class player : CharacterBody3D
 	private bool m_walkFactor = false;
     private bool m_completeTurn = false;
     private Vector3 m_targetLookDirection = Vector3.Zero;
-    private List<Area3D> m_targetList = new List<Area3D>();
-    private Area3D m_lockedTarget = null;
+    private List<LockOnComponent> m_targetList = new List<LockOnComponent>();
+    private LockOnComponent m_lockedTarget = null;
 
     public override void _Ready()
     {
@@ -133,7 +133,7 @@ public partial class player : CharacterBody3D
     private void LockOnTarget()
     {
         float closestToHorizontalCenter = float.MaxValue;
-        m_lockedTarget = null;
+        LockOnComponent selectedTarget = null;
         for (int i = 0; i < m_targetList.Count; i++)
         {
             if (mainCamera.Camera.IsPositionInFrustum(m_targetList[i].GlobalPosition))
@@ -142,20 +142,41 @@ public partial class player : CharacterBody3D
                 if (Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X) < closestToHorizontalCenter)
                 {
                     closestToHorizontalCenter = Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X);
-                    m_lockedTarget = m_targetList[i];
+                    selectedTarget = m_targetList[i];
                 }
             }
         }
         
-        GUI.LockOnTarget(m_lockedTarget);
+        if (selectedTarget != null) 
+        {
+            if (m_lockedTarget != selectedTarget)
+            {
+                if(m_lockedTarget != null)
+                {
+                    m_lockedTarget.UnlockTarget();
+                }
+                m_lockedTarget = selectedTarget;
+                m_lockedTarget.LockTarget();
+            }
+        }
+        else
+        {
+            if (m_lockedTarget != null)
+            {
+                m_lockedTarget.UnlockTarget();
+            }
+            m_lockedTarget = null;
+        }
+        //GUI.LockOnTarget(m_lockedTarget);
+        //m_lockedTarget.LockTarget()
     }
 
-    public void AddBanditToList(Area3D enemy)
+    public void AddBanditToList(LockOnComponent enemy)
     {
         m_targetList.Add(enemy);
     }
 
-    public void RemoveBanditFromList(Area3D enemy)
+    public void RemoveBanditFromList(LockOnComponent enemy)
     {
         m_targetList.Remove(enemy);
     }
