@@ -6,11 +6,20 @@ public partial class camera_controller : Node3D
     public float sensitity = 0.005f;
 
     private SpringArm3D m_springArm3D;
+    private Camera3D m_camera3D;
+    public Camera3D Camera 
+    {
+        get
+        {
+            return m_camera3D;
+        }
+    }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         m_springArm3D = GetNode<SpringArm3D>("SpringArm3D");
+        m_camera3D = GetNode<Camera3D>("SpringArm3D/Camera3D");
     }
 
     public override void _UnhandledInput(InputEvent @event)
