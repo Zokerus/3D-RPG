@@ -7,6 +7,8 @@ public partial class player : CharacterBody3D
 {
 	[Export]
 	public camera_controller mainCamera;
+    [Export]
+    public UI GUI;
 
 	private AnimationTree m_animationTree;
 
@@ -139,16 +141,14 @@ public partial class player : CharacterBody3D
                 Vector2 screenCoords = mainCamera.Camera.UnprojectPosition(m_targetList[i].GlobalPosition);
                 if (Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X) < closestToHorizontalCenter)
                 {
-                    closestToHorizontalCenter = Mathf.Abs(GetViewport().GetVisibleRect().Size.X / 2.0f);
+                    closestToHorizontalCenter = Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X);
                     m_lockedTarget = m_targetList[i];
                 }
+                Debug.Print((GetViewport().GetVisibleRect().Size.X / 2.0f).ToString());
             }
         }
         
-        if (m_lockedTarget != null) 
-        {
-            Debug.Print(m_lockedTarget.ToString());
-        }
+        GUI.LockOnTarget(m_lockedTarget);
     }
 
     public void AddBanditToList(Area3D enemy)

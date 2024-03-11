@@ -18,5 +18,5 @@ visible = false
 layout_mode = 0
 offset_right = 32.0
 offset_bottom = 32.0
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_qxpup")
