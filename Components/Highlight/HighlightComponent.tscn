@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnqtacrijbnkb"]
+
+[ext_resource type="Script" path="res://Components/Highlight/HighlightComponent.cs" id="1_63rkq"]
+
+[node name="HighlightComponent" type="Node3D" node_paths=PackedStringArray("meshes")]
+script = ExtResource("1_63rkq")
+meshes = []
