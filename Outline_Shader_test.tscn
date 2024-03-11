@@ -1,36 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://bm1g3v1umbehs"]
+[gd_scene load_steps=7 format=3 uid="uid://bm1g3v1umbehs"]
 
-[ext_resource type="Shader" path="res://Outline.gdshader" id="1_xhtnk"]
-[ext_resource type="Shader" uid="uid://dlao1daagraox" path="res://Fresnel.tres" id="2_4ijt8"]
+[ext_resource type="Material" uid="uid://bqojeen7m6o83" path="res://Materials/Outline.tres" id="2_of8jb"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_8iu7y"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_caiof"]
-render_priority = 0
-shader = ExtResource("1_xhtnk")
-shader_parameter/border_width = 0.034
-shader_parameter/color = Color(1, 1, 1, 1)
-shader_parameter/pattern = true
-shader_parameter/line_number = 5.0
-shader_parameter/line_sharpness = 2.588
-shader_parameter/pulse = false
-shader_parameter/pulse_speed = 2.0
-shader_parameter/line_movement = true
-shader_parameter/line_movement_speed = 3.0
-shader_parameter/wave = false
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1qfla"]
-next_pass = SubResource("ShaderMaterial_caiof")
 albedo_color = Color(0.929412, 0.258824, 0.0588235, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_p4ri8"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_737ui"]
-render_priority = 0
-shader = ExtResource("2_4ijt8")
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gpnsy"]
-next_pass = SubResource("ShaderMaterial_737ui")
 albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2tu5x"]
@@ -38,11 +17,13 @@ albedo_color = Color(1, 0, 0, 1)
 [node name="Node3D" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_overlay = ExtResource("2_of8jb")
 mesh = SubResource("BoxMesh_8iu7y")
 surface_material_override/0 = SubResource("StandardMaterial3D_1qfla")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+material_overlay = ExtResource("2_of8jb")
 mesh = SubResource("CapsuleMesh_p4ri8")
 surface_material_override/0 = SubResource("StandardMaterial3D_gpnsy")
 
