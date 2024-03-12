@@ -157,6 +157,7 @@ public partial class player : CharacterBody3D
                 }
                 m_lockedTarget = selectedTarget;
                 m_lockedTarget.LockTarget();
+                mainCamera.LockTarget(m_lockedTarget);
             }
         }
         else
@@ -164,11 +165,10 @@ public partial class player : CharacterBody3D
             if (m_lockedTarget != null)
             {
                 m_lockedTarget.UnlockTarget();
+                mainCamera.UnlockTarget();
             }
             m_lockedTarget = null;
         }
-        //GUI.LockOnTarget(m_lockedTarget);
-        //m_lockedTarget.LockTarget()
     }
 
     public void AddBanditToList(LockOnComponent enemy)
