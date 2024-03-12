@@ -17,7 +17,7 @@ public partial class UI : Control
 	{
 		if (m_lockOnDot.Visible) 
 		{
-            m_lockOnDot.Position = GetViewport().GetCamera3D().UnprojectPosition(m_lockedTarget.GlobalPosition);
+            //m_lockOnDot.Position = GetViewport().GetCamera3D().UnprojectPosition(m_lockedTarget.GlobalPosition);
         }
 	}
 
