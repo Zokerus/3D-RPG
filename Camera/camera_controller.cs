@@ -8,7 +8,7 @@ public partial class camera_controller : Node3D
 
     private SpringArm3D m_springArm3D;
     private Camera3D m_camera3D;
-    private Timer m_delayTimer;
+    private Timer m_recenterTimer;
     private LockOnComponent m_target = null;
     private bool m_locked = false;
 
@@ -25,7 +25,7 @@ public partial class camera_controller : Node3D
     {
         m_springArm3D = GetNode<SpringArm3D>("SpringArm3D");
         m_camera3D = GetNode<Camera3D>("SpringArm3D/Camera3D");
-        m_delayTimer = GetNode<Timer>("DelayTimer");
+        m_recenterTimer = GetNode<Timer>("DelayTimer");
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -35,6 +35,9 @@ public partial class camera_controller : Node3D
             this.RotateY(-mouseMotion.Relative.X * sensitity);
             m_springArm3D.RotateX(-mouseMotion.Relative.Y * sensitity);
             m_springArm3D.Rotation = new Vector3(Mathf.Clamp(m_springArm3D.Rotation.X, -Mathf.Pi * 0.25f, Mathf.Pi * 0.25f), m_springArm3D.Rotation.Y, m_springArm3D.Rotation.Z);
+            m_locked = false;
+            m_recenterTimer.Stop();
+            m_recenterTimer.Start();
         }
 
     }
