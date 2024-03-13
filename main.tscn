@@ -24,7 +24,7 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 transform = Transform3D(-0.714583, 0, 0.699551, 0, 1, 0, -0.699551, 0, -0.714583, -10.7964, 0, 13)
 
 [node name="Bandit3" parent="." instance=ExtResource("5_k72ix")]
-transform = Transform3D(0.746452, 0, -0.665439, 0, 1, 0, 0.665439, 0, 0.746452, 10.2578, 0, -6.71664)
+transform = Transform3D(0.746452, 0, -0.665439, 0, 1, 0, 0.665439, 0, 0.746452, 10, 0, -7)
 
 [node name="CameraController" parent="." instance=ExtResource("3_5wbq8")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)

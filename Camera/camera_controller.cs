@@ -36,12 +36,12 @@ public partial class camera_controller : Node3D
             m_springArm3D.RotateX(-mouseMotion.Relative.Y * sensitity);
             m_springArm3D.Rotation = new Vector3(Mathf.Clamp(m_springArm3D.Rotation.X, -Mathf.Pi * 0.25f, Mathf.Pi * 0.25f), m_springArm3D.Rotation.Y, m_springArm3D.Rotation.Z);
         }
+
     }
 
     public void LockTarget(LockOnComponent target) 
     {
         m_target = target;
-        this.LookAt(m_target.GlobalPosition, Vector3.Up, false);
         m_locked = true;
     }
 
@@ -55,13 +55,9 @@ public partial class camera_controller : Node3D
         base._Process(delta);
         if(m_target != null && m_locked)
         {
-            Vector3 directionToTarget = this.GlobalPosition.DirectionTo(m_target.GlobalPosition);
-            
-            float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(directionToTarget, Vector3.Up) + Mathf.Pi;
-            this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(4.0f * (float)delta, Mathf.Abs(rotationAngle)));
-            //this.LookAt(m_target.GlobalPosition, Vector3.Up, false);
-            Debug.Print(this.GlobalPosition.ToString() + " : " + m_target.GlobalPosition.ToString());
-            //Debug.Print(directionToTarget.ToString() + " : " + rotationAngle.ToString());
+            Vector3 directionToTarget = this.GlobalPosition.DirectionTo(m_target.GlobalPosition).Normalized();
+            float rotationAngle = Mathf.Atan2(-directionToTarget.X, -directionToTarget.Z);
+            this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngle, 0.1f), this.Rotation.Z);
         }
     }
 
