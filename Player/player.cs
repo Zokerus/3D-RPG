@@ -87,27 +87,37 @@ public partial class player : CharacterBody3D
         Vector2 inputDir = Input.GetVector("Left", "Right", "Forward", "Backward");
         m_movementDirection = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 
-        //Rotate the Player according to camera rotation and movement direction (input)
-        if (m_movementDirection != Vector3.Zero)
+        //If a target is locked, the player will turn towards the target and not based on the input parameter
+        if (m_lockedTarget == null)
         {
-            m_targetLookDirection = m_movementDirection;
-            float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_targetLookDirection, Vector3.Up);
-            this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * (float)delta, Mathf.Abs(rotationAngle)));
-            m_completeTurn = true;
+            //Rotate the Player according to camera rotation and movement direction (input)
+            if (m_movementDirection != Vector3.Zero)
+            {
+                m_targetLookDirection = m_movementDirection;
+                float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_targetLookDirection, Vector3.Up);
+                this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * (float)delta, Mathf.Abs(rotationAngle)));
+                m_completeTurn = true;
+            }
+            else
+            {
+                if (m_completeTurn)
+                {
+                    float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_targetLookDirection, Vector3.Up);
+                    this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * 2 * (float)delta, Mathf.Abs(rotationAngle)));
+                    m_animationTree.Set("parameters/TurnOnSpot/blend_amount", 1);
+                    if (Mathf.Abs(rotationAngle) < 0.01f)
+                    {
+                        m_completeTurn = false;
+                        m_animationTree.Set("parameters/TurnOnSpot/blend_amount", 0);
+                    }
+                }
+            }
         }
         else
         {
-            if (m_completeTurn) 
-            {
-                float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_targetLookDirection, Vector3.Up);
-                this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * 2 * (float)delta, Mathf.Abs(rotationAngle)));
-                m_animationTree.Set("parameters/TurnOnSpot/blend_amount", 1);
-                if (Mathf.Abs(rotationAngle) < 0.01f)
-                { 
-                    m_completeTurn = false;
-                    m_animationTree.Set("parameters/TurnOnSpot/blend_amount", 0);
-                }
-            }
+            Vector3 directionToTarget = this.GlobalPosition.DirectionTo(m_lockedTarget .GlobalPosition).Normalized();
+            float rotationAngleY = Mathf.Atan2(directionToTarget.X, directionToTarget.Z);
+            this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.1f), this.Rotation.Z);
         }
 
         if (m_movementDirection != Vector3.Zero && m_walkFactor && IsOnFloor())
