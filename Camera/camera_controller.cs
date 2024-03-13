@@ -10,7 +10,7 @@ public partial class camera_controller : Node3D
     [Export]
     public float lockOnMaxDistance = 20.0f;
     [Export]
-    public float lockOnMinAngle = 2.0f;
+    public float lockOnMinAngle = 8.0f;
     [Export]
     public float lockOnMaxAngle = 10.0f;
 
@@ -77,7 +77,6 @@ public partial class camera_controller : Node3D
 
             this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.1f), this.Rotation.Z);
             m_springArm3D.Rotation = new Vector3(Mathf.Clamp(Mathf.LerpAngle(m_springArm3D.Rotation.X, rotationAngleX, 0.1f), -Mathf.Pi * 0.25f, Mathf.Pi * 0.25f), m_springArm3D.Rotation.Y, m_springArm3D.Rotation.Z);
-            Debug.Print(rotationAngleX.ToString());
         }
     }
 

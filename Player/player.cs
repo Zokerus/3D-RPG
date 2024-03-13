@@ -35,13 +35,14 @@ public partial class player : CharacterBody3D
 		m_animationTree = GetNode<AnimationTree>("AnimationTree");
     }
 
-    public override void _UnhandledKeyInput(InputEvent @event)
+    public override void _UnhandledInput(InputEvent @event)
     {
-		Vector3 velocity = Velocity;
+        base._UnhandledInput(@event);
+        Vector3 velocity = Velocity;
 
-		// Handle Jump.
-		if (@event.IsActionPressed("Jump") && IsOnFloor())
-			velocity.Y = m_jumpVelocity;
+        // Handle Jump.
+        if (@event.IsActionPressed("Jump") && IsOnFloor())
+            velocity.Y = m_jumpVelocity;
 
 
         if (@event.IsActionPressed("Run", true) && IsOnFloor() && m_movementDirection != Vector3.Zero)
@@ -52,22 +53,13 @@ public partial class player : CharacterBody3D
         {
             m_walkFactor = false;
         }
-		
-        if(@event.IsActionPressed("LockTarget"))
+
+        if (@event.IsActionPressed("LockTarget"))
         {
             LockOnTarget();
         }
 
         Velocity = velocity;
-	}
-
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        base._UnhandledInput(@event);
-        if (@event.IsActionPressed("LockTarget"))
-        {
-            LockOnTarget();
-        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -167,6 +159,12 @@ public partial class player : CharacterBody3D
                 m_lockedTarget = selectedTarget;
                 m_lockedTarget.LockTarget();
                 mainCamera.LockTarget(m_lockedTarget);
+            }
+            else
+            {
+                m_lockedTarget.UnlockTarget();
+                mainCamera.UnlockTarget();
+                m_lockedTarget = null;
             }
         }
         else

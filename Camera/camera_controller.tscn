@@ -4,7 +4,7 @@
 
 [node name="CameraController" type="Node3D"]
 script = ExtResource("1_n515j")
-lockOnMinAngle = 10.0
+lockOnMinAngle = 8.0
 
 [node name="SpringArm3D" type="SpringArm3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
