@@ -61,7 +61,16 @@ public partial class player : CharacterBody3D
         Velocity = velocity;
 	}
 
-	public override void _PhysicsProcess(double delta)
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        base._UnhandledInput(@event);
+        if (@event.IsActionPressed("LockTarget"))
+        {
+            LockOnTarget();
+        }
+    }
+
+    public override void _PhysicsProcess(double delta)
 	{
 		Vector3 velocity = Velocity;
 
