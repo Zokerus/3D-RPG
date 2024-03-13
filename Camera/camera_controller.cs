@@ -5,6 +5,14 @@ public partial class camera_controller : Node3D
 {
     [Export]
     public float sensitity = 0.005f;
+    [Export]
+    public float lockOnMinDistance = 2.0f;
+    [Export]
+    public float lockOnMaxDistance = 20.0f;
+    [Export]
+    public float lockOnMinAngle = 2.0f;
+    [Export]
+    public float lockOnMaxAngle = 10.0f;
 
     private SpringArm3D m_springArm3D;
     private Camera3D m_camera3D;
@@ -59,8 +67,17 @@ public partial class camera_controller : Node3D
         if(m_target != null && m_locked)
         {
             Vector3 directionToTarget = this.GlobalPosition.DirectionTo(m_target.GlobalPosition).Normalized();
-            float rotationAngle = Mathf.Atan2(-directionToTarget.X, -directionToTarget.Z);
-            this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngle, 0.1f), this.Rotation.Z);
+            float rotationAngleY = Mathf.Atan2(-directionToTarget.X, -directionToTarget.Z);
+            
+            float clampedDistance = Mathf.Clamp(this.GlobalPosition.DistanceTo(m_target.GlobalPosition), lockOnMinDistance, lockOnMaxDistance);
+            float normalizedDistance = (clampedDistance - lockOnMinDistance) / (lockOnMaxDistance - lockOnMinDistance);
+            normalizedDistance = Mathf.SmoothStep(0.0f, 1.0f, normalizedDistance);
+            float rotationAngleX = Mathf.DegToRad(-Mathf.Lerp(lockOnMaxAngle, lockOnMinAngle, normalizedDistance));
+
+
+            this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.1f), this.Rotation.Z);
+            m_springArm3D.Rotation = new Vector3(Mathf.Clamp(Mathf.LerpAngle(m_springArm3D.Rotation.X, rotationAngleX, 0.1f), -Mathf.Pi * 0.25f, Mathf.Pi * 0.25f), m_springArm3D.Rotation.Y, m_springArm3D.Rotation.Z);
+            Debug.Print(rotationAngleX.ToString());
         }
     }
 
