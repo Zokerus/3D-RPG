@@ -20,6 +20,7 @@ public partial class player : CharacterBody3D
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	private float m_gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private bool m_walkFactor = false;
+    private bool m_runFactor = false;
     private bool m_completeTurn = false;
     private Vector3 m_targetLookDirection = Vector3.Zero;
     private List<LockOnComponent> m_targetList = new List<LockOnComponent>();
@@ -47,11 +48,11 @@ public partial class player : CharacterBody3D
 
         if (@event.IsActionPressed("Run", true) && IsOnFloor() && m_movementDirection != Vector3.Zero)
         {
-            m_walkFactor = true;
+            m_runFactor = true;
         }
         else
         {
-            m_walkFactor = false;
+            m_runFactor = false;
         }
 
         if (@event.IsActionPressed("LockTarget"))
@@ -66,15 +67,16 @@ public partial class player : CharacterBody3D
 	{
 		Vector3 velocity = Velocity;
 
-		// Add the gravity.
-		if (!IsOnFloor())
-			velocity.Y -= m_gravity * (float)delta;
 
         CalculateMovement((float)delta);
 
         // Get position change based an animation (root motion)
         Quaternion currentRotation = Transform.Basis.GetRotationQuaternion();
         velocity = DivideByFloat(currentRotation.Normalized() * m_animationTree.GetRootMotionPosition(), (float)delta);
+		
+        // Add the gravity.
+		if (!IsOnFloor())
+			velocity.Y -= m_gravity * (float)delta;
 
         Velocity = velocity;
 		MoveAndSlide();
@@ -104,11 +106,9 @@ public partial class player : CharacterBody3D
                 {
                     float rotationAngle = this.Transform.Basis.Z.SignedAngleTo(m_targetLookDirection, Vector3.Up);
                     this.RotateY(Mathf.Sign(rotationAngle) * Mathf.Min(m_characterRotationRate * 2 * (float)delta, Mathf.Abs(rotationAngle)));
-                    m_animationTree.Set("parameters/TurnOnSpot/blend_amount", 1);
                     if (Mathf.Abs(rotationAngle) < 0.01f)
                     {
                         m_completeTurn = false;
-                        m_animationTree.Set("parameters/TurnOnSpot/blend_amount", 0);
                     }
                 }
             }
@@ -120,13 +120,11 @@ public partial class player : CharacterBody3D
             this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.1f), this.Rotation.Z);
         }
 
-        if (m_movementDirection != Vector3.Zero && m_walkFactor && IsOnFloor())
+        //m_animationTree.Set("parameters/LockedLocomotion/blend_position", inputDir);
+
+        if (IsOnFloor())
         {
-            m_animationTree.Set("parameters/Movement/blend_amount", 1); //Blend Value of 1 equals walking
-        }
-        else
-        {
-            m_animationTree.Set("parameters/Movement/blend_amount", -1 + inputDir.Length()); //Input.GetVector is by default limited to the length of 1
+            m_animationTree.Set("parameters/Movement/blend_position", 2 * inputDir.Normalized().Length() - Convert.ToInt32(m_walkFactor) + Convert.ToInt32(m_runFactor)); //Blend Value of 1 equals walking
         }
     }
 
