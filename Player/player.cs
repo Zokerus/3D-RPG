@@ -124,7 +124,26 @@ public partial class player : CharacterBody3D
 
         if (IsOnFloor())
         {
-            m_animationTree.Set("parameters/Movement/blend_position", 2 * inputDir.Normalized().Length() - Convert.ToInt32(m_walkFactor) + Convert.ToInt32(m_runFactor)); //Blend Value of 1 equals walking
+            if (inputDir != Vector2.Zero)
+            {
+                if (m_lockedTarget == null)
+                {
+                    m_animationTree.Set("parameters/MovementSwitch/transition_request", "Movement");
+                    m_animationTree.Set("parameters/Movement/blend_position", 2 * inputDir.Normalized().Length() - Convert.ToInt32(m_walkFactor) + Convert.ToInt32(m_runFactor)); //Blend Value of 1 equals walking
+                    Debug.Print(inputDir.Normalized().Length().ToString() + " : " + Convert.ToInt32(m_walkFactor).ToString() + " : " + Convert.ToInt32(m_runFactor).ToString());
+                }
+                else
+                {
+                    m_animationTree.Set("parameters/MovementSwitch/transition_request", "LockedMovement");
+                    m_animationTree.Set("parameters/WalkRunBlend/blend_amount", Convert.ToInt32(!m_walkFactor));
+                    m_animationTree.Set("parameters/LockedWalk/blend_position", inputDir);
+                    m_animationTree.Set("parameters/LockedRun/blend_position", inputDir);
+                }
+            }
+            else
+            {
+                m_animationTree.Set("parameters/MovementSwitch/transition_request", "Idle");
+            }
         }
     }
 
