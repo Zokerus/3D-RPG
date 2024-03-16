@@ -13,8 +13,8 @@ spring_length = 3.0
 [node name="Camera3D" type="Camera3D" parent="SpringArm3D"]
 current = true
 
-[node name="DelayTimer" type="Timer" parent="."]
+[node name="RecenterTimer" type="Timer" parent="."]
 wait_time = 0.3
 one_shot = true
 
-[connection signal="timeout" from="DelayTimer" to="." method="OnTimerTimeout"]
+[connection signal="timeout" from="RecenterTimer" to="." method="OnTimerTimeout"]

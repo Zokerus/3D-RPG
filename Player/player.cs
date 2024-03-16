@@ -46,14 +46,16 @@ public partial class player : CharacterBody3D
             velocity.Y = m_jumpVelocity;
 
 
-        if (@event.IsActionPressed("Run", true) && IsOnFloor() && m_movementDirection != Vector3.Zero)
+        if (@event.IsActionPressed("Run", true) && IsOnFloor())
         {
             m_runFactor = true;
+            mainCamera.UnlockCamera();
         }
         
-        if(@event.IsActionReleased("Run",true) || !IsOnFloor() || m_movementDirection == Vector3.Zero)
+        if(@event.IsActionReleased("Run",true) || !IsOnFloor())
         {
             m_runFactor = false;
+            mainCamera.LockCamera();
         }
 
         if (@event.IsActionPressed("LockTarget"))
@@ -62,6 +64,7 @@ public partial class player : CharacterBody3D
         }
 
         Velocity = velocity;
+        
     }
 
     public override void _PhysicsProcess(double delta)
@@ -91,7 +94,7 @@ public partial class player : CharacterBody3D
         m_movementDirection = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 
         //If a target is locked, the player will turn towards the target and not based on the input parameter
-        if (m_lockedTarget == null)
+        if (m_lockedTarget == null || m_runFactor)
         {
             //Rotate the Player according to camera rotation and movement direction (input)
             if (m_movementDirection != Vector3.Zero)
@@ -127,7 +130,7 @@ public partial class player : CharacterBody3D
         {
             if (inputDir != Vector2.Zero)
             {
-                if (m_lockedTarget == null)
+                if (m_lockedTarget == null || m_runFactor)
                 {
                     m_animationTree.Set("parameters/MovementSwitch/transition_request", "Movement");
                     m_animationTree.Set("parameters/Movement/blend_position", 2 * inputDir.Normalized().Length() - Convert.ToInt32(m_walkFactor) + Convert.ToInt32(m_runFactor)); //Blend Value of 1 equals walking
