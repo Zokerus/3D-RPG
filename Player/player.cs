@@ -50,7 +50,8 @@ public partial class player : CharacterBody3D
         {
             m_runFactor = true;
         }
-        else
+        
+        if(@event.IsActionReleased("Run",true) || !IsOnFloor() || m_movementDirection == Vector3.Zero)
         {
             m_runFactor = false;
         }
@@ -130,7 +131,6 @@ public partial class player : CharacterBody3D
                 {
                     m_animationTree.Set("parameters/MovementSwitch/transition_request", "Movement");
                     m_animationTree.Set("parameters/Movement/blend_position", 2 * inputDir.Normalized().Length() - Convert.ToInt32(m_walkFactor) + Convert.ToInt32(m_runFactor)); //Blend Value of 1 equals walking
-                    Debug.Print(inputDir.Normalized().Length().ToString() + " : " + Convert.ToInt32(m_walkFactor).ToString() + " : " + Convert.ToInt32(m_runFactor).ToString());
                 }
                 else
                 {
