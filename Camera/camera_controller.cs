@@ -81,7 +81,10 @@ public partial class camera_controller : Node3D
 
     public void OnTimerTimeout()
     {
-        m_locked = true;
+        if (m_target != null)
+        {
+            m_locked = true;
+        }
     }
 
     public void LockCamera()

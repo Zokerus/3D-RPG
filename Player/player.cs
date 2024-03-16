@@ -25,6 +25,8 @@ public partial class player : CharacterBody3D
     private Vector3 m_targetLookDirection = Vector3.Zero;
     private List<LockOnComponent> m_targetList = new List<LockOnComponent>();
     private LockOnComponent m_lockedTarget = null;
+    private bool m_locked = false;
+    private Timer m_recenterTimer = null;
 
     public override void _Ready()
     {
@@ -34,6 +36,7 @@ public partial class player : CharacterBody3D
         }
 
 		m_animationTree = GetNode<AnimationTree>("AnimationTree");
+        m_recenterTimer = GetNode<Timer>("RecenterTimer");
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -50,12 +53,16 @@ public partial class player : CharacterBody3D
         {
             m_runFactor = true;
             mainCamera.UnlockCamera();
+            m_locked = false;
+            m_recenterTimer.Stop();
         }
         
         if(@event.IsActionReleased("Run",true) || !IsOnFloor())
         {
             m_runFactor = false;
             mainCamera.LockCamera();
+            m_recenterTimer.Stop();
+            m_recenterTimer.Start();
         }
 
         if (@event.IsActionPressed("LockTarget"))
@@ -64,13 +71,11 @@ public partial class player : CharacterBody3D
         }
 
         Velocity = velocity;
-        
     }
 
     public override void _PhysicsProcess(double delta)
 	{
-		Vector3 velocity = Velocity;
-
+        Vector3 velocity = Velocity;
 
         CalculateMovement((float)delta);
 
@@ -94,7 +99,7 @@ public partial class player : CharacterBody3D
         m_movementDirection = (mainCamera.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 
         //If a target is locked, the player will turn towards the target and not based on the input parameter
-        if (m_lockedTarget == null || m_runFactor)
+        if (!m_locked || m_runFactor)
         {
             //Rotate the Player according to camera rotation and movement direction (input)
             if (m_movementDirection != Vector3.Zero)
@@ -123,8 +128,6 @@ public partial class player : CharacterBody3D
             float rotationAngleY = Mathf.Atan2(directionToTarget.X, directionToTarget.Z);
             this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.1f), this.Rotation.Z);
         }
-
-        //m_animationTree.Set("parameters/LockedLocomotion/blend_position", inputDir);
 
         if (IsOnFloor())
         {
@@ -189,12 +192,14 @@ public partial class player : CharacterBody3D
                 m_lockedTarget = selectedTarget;
                 m_lockedTarget.LockTarget();
                 mainCamera.LockTarget(m_lockedTarget);
+                m_locked = true;
             }
             else
             {
                 m_lockedTarget.UnlockTarget();
                 mainCamera.UnlockTarget();
                 m_lockedTarget = null;
+                m_locked = false;
             }
         }
         else
@@ -205,15 +210,24 @@ public partial class player : CharacterBody3D
                 mainCamera.UnlockTarget();
             }
             m_lockedTarget = null;
+            m_locked = false;
         }
     }
 
-    public void AddBanditToList(LockOnComponent enemy)
+    public void OnRecenterTimerTimeout()
+    {
+        if(m_lockedTarget != null)
+        {
+            m_locked = true;
+        }
+    }
+
+    public void AddTargetToList(LockOnComponent enemy)
     {
         m_targetList.Add(enemy);
     }
 
-    public void RemoveBanditFromList(LockOnComponent enemy)
+    public void RemoveTargetFromList(LockOnComponent enemy)
     {
         m_targetList.Remove(enemy);
     }
