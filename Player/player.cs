@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 
 public partial class player : CharacterBody3D
@@ -126,7 +127,16 @@ public partial class player : CharacterBody3D
         {
             Vector3 directionToTarget = this.GlobalPosition.DirectionTo(m_lockedTarget .GlobalPosition).Normalized();
             float rotationAngleY = Mathf.Atan2(directionToTarget.X, directionToTarget.Z);
-            this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.1f), this.Rotation.Z);
+            Debug.Print(Mathf.Abs((this.Rotation.Y - rotationAngleY) % Mathf.Pi).ToString());
+            if (Mathf.Abs((this.Rotation.Y - rotationAngleY) % Mathf.Pi) > 0.17f) //Difference greater then 10 deg
+            {
+                this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.1f), this.Rotation.Z);
+            }
+            else
+            {
+                this.Rotation = new Vector3(this.Rotation.X, rotationAngleY, this.Rotation.Z);
+            }
+
         }
 
         if (IsOnFloor())

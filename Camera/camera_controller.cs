@@ -73,9 +73,15 @@ public partial class camera_controller : Node3D
             normalizedDistance = Mathf.SmoothStep(0.0f, 1.0f, normalizedDistance);
             float rotationAngleX = Mathf.DegToRad(-Mathf.Lerp(lockOnMaxAngle, lockOnMinAngle, normalizedDistance));
 
-
-            this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.1f), this.Rotation.Z);
-            m_springArm3D.Rotation = new Vector3(Mathf.Clamp(Mathf.LerpAngle(m_springArm3D.Rotation.X, rotationAngleX, 0.1f), -Mathf.Pi * 0.25f, Mathf.Pi * 0.25f), m_springArm3D.Rotation.Y, m_springArm3D.Rotation.Z);
+            if (Mathf.Abs((this.Rotation.Y - rotationAngleY) % Mathf.Pi) > 0.087f)
+            {
+                this.Rotation = new Vector3(this.Rotation.X, Mathf.LerpAngle(this.Rotation.Y, rotationAngleY, 0.2f), this.Rotation.Z);
+            }
+            else
+            {
+                this.Rotation = new Vector3(this.Rotation.X, rotationAngleY, this.Rotation.Z);
+            }
+                m_springArm3D.Rotation = new Vector3(Mathf.Clamp(Mathf.LerpAngle(m_springArm3D.Rotation.X, rotationAngleX, 0.1f), -Mathf.Pi * 0.25f, Mathf.Pi * 0.25f), m_springArm3D.Rotation.Y, m_springArm3D.Rotation.Z);
         }
     }
 
