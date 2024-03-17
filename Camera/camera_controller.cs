@@ -19,6 +19,7 @@ public partial class camera_controller : Node3D
     private Timer m_recenterTimer;
     private LockOnComponent m_target = null;
     private bool m_locked = false;
+    private RayCast3D m_raycast = null;
 
     public Camera3D Camera 
     {
@@ -34,6 +35,7 @@ public partial class camera_controller : Node3D
         m_springArm3D = GetNode<SpringArm3D>("SpringArm3D");
         m_camera3D = GetNode<Camera3D>("SpringArm3D/Camera3D");
         m_recenterTimer = GetNode<Timer>("RecenterTimer");
+        m_raycast = GetNode<RayCast3D>("SpringArm3D/Camera3D/RayCast3D");
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -111,5 +113,23 @@ public partial class camera_controller : Node3D
     {
         m_locked = false;
         m_recenterTimer.Stop();
+    }
+
+    public bool IsTargetVisible(LockOnComponent target)
+    {
+        this.m_raycast.TargetPosition = target.GlobalPosition;
+        this.m_raycast.Enabled = true;
+        this.m_raycast.ForceRaycastUpdate();
+
+        if(this.m_raycast.IsColliding())
+        {
+            if(this.m_raycast.GetCollider() == target || this.m_raycast.GetCollider() == target.GetParent())
+            {
+                this.m_raycast.Enabled=false;
+                return true;
+            }
+        }
+        this.m_raycast.Enabled = false;
+        return false;
     }
 }
