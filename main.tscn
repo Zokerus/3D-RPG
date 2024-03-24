@@ -13,7 +13,7 @@ script = ExtResource("1_nol88")
 [node name="TestLevel" parent="." instance=ExtResource("1_bkj5s")]
 
 [node name="Player" parent="." node_paths=PackedStringArray("mainCamera", "GUI") instance=ExtResource("2_df4vu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.442)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
 mainCamera = NodePath("../CameraController")
 GUI = NodePath("../UI")
 
@@ -24,7 +24,7 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 transform = Transform3D(-0.714583, 0, 0.699551, 0, 1, 0, -0.699551, 0, -0.714583, -10.7964, 0, 13)
 
 [node name="Bandit3" parent="." instance=ExtResource("5_k72ix")]
-transform = Transform3D(0.746452, 0, -0.665439, 0, 1, 0, 0.665439, 0, 0.746452, 7.5, 0, 0)
+transform = Transform3D(-0.714583, 0, 0.699551, 0, 1, 0, -0.699551, 0, -0.714583, 7, 0, 0)
 
 [node name="CameraController" parent="." instance=ExtResource("3_5wbq8")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)

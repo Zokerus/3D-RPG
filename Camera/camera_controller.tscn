@@ -17,6 +17,8 @@ current = true
 enabled = false
 target_position = Vector3(0, 0, -1)
 collision_mask = 259
+collide_with_areas = true
+debug_shape_custom_color = Color(0, 0.921569, 0, 1)
 
 [node name="RecenterTimer" type="Timer" parent="."]
 wait_time = 0.3
