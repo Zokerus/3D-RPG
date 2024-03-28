@@ -117,20 +117,20 @@ public partial class camera_controller : Node3D
 
     public bool IsTargetVisible(LockOnComponent target)
     {
-        this.m_raycast.TargetPosition = target.GlobalPosition - this.m_raycast.GlobalPosition ;
+        Vector2 screenPosition = this.m_camera3D.UnprojectPosition(target.GlobalPosition);
+        this.m_raycast.TargetPosition = this.m_camera3D.ProjectLocalRayNormal(screenPosition) * this.m_camera3D.GlobalPosition.DistanceTo(target.GlobalPosition);
         this.m_raycast.Enabled = true;
         this.m_raycast.ForceRaycastUpdate();
 
         if(this.m_raycast.IsColliding())
         {
-            Debug.Print(this.m_raycast.GetCollider().ToString());
             if(this.m_raycast.GetCollider() == target || this.m_raycast.GetCollider() == target.GetParent())
             {
-                //this.m_raycast.Enabled=false;
+                this.m_raycast.Enabled=false;
                 return true;
             }
         }
-       // this.m_raycast.Enabled = false;
+        this.m_raycast.Enabled = false;
         return false;
     }
 }

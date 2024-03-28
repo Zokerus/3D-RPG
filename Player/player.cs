@@ -184,7 +184,7 @@ public partial class player : CharacterBody3D
             if (mainCamera.Camera.IsPositionInFrustum(m_targetList[i].GlobalPosition))
             {
                 Vector2 screenCoords = mainCamera.Camera.UnprojectPosition(m_targetList[i].GlobalPosition);
-                if (Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X) < closestToHorizontalCenter && IsTargetVisible(m_targetList[i]))
+                if (Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X) < closestToHorizontalCenter && this.mainCamera.IsTargetVisible(m_targetList[i]))
                 {
                     closestToHorizontalCenter = Mathf.Abs((GetViewport().GetVisibleRect().Size.X / 2.0f) - screenCoords.X);
                     selectedTarget = m_targetList[i];
@@ -241,24 +241,5 @@ public partial class player : CharacterBody3D
     public void RemoveTargetFromList(LockOnComponent enemy)
     {
         m_targetList.Remove(enemy);
-    }
-
-    public bool IsTargetVisible(LockOnComponent target)
-    {
-        this.m_raycast.TargetPosition = (target.GlobalPosition - this.m_raycast.GlobalPosition);
-        this.m_raycast.Enabled = true;
-        this.m_raycast.ForceRaycastUpdate();
-
-        if (this.m_raycast.IsColliding())
-        {
-            Debug.Print(this.m_raycast.GetCollider().ToString());
-            if (this.m_raycast.GetCollider() == target || this.m_raycast.GetCollider() == target.GetParent())
-            {
-                //this.m_raycast.Enabled=false;
-                return true;
-            }
-        }
-        //this.m_raycast.Enabled = false;
-        return false;
     }
 }
