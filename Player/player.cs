@@ -29,6 +29,7 @@ public partial class player : CharacterBody3D
     private bool m_locked = false;
     private Timer m_recenterTimer = null;
     private RayCast3D m_raycast = null;
+    private TransparencyComponent m_transparencyComponent = null;
 
     public override void _Ready()
     {
@@ -40,6 +41,7 @@ public partial class player : CharacterBody3D
 		m_animationTree = GetNode<AnimationTree>("AnimationTree");
         m_recenterTimer = GetNode<Timer>("RecenterTimer");
         m_raycast = GetNode<RayCast3D>("RayCast3D");
+        m_transparencyComponent = GetNode<TransparencyComponent>("TransparencyComponent");
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -93,6 +95,8 @@ public partial class player : CharacterBody3D
         Velocity = velocity;
 		MoveAndSlide();
 		mainCamera.GlobalPosition = this.GlobalPosition;
+        
+        this.m_transparencyComponent.CalculateTransparency(this.GlobalPosition.DistanceTo(mainCamera.Camera.GlobalPosition));
 	}
 
 	private void CalculateMovement(float delta)
