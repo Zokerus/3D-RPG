@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cullhgw072x83"]
+
+[ext_resource type="Script" path="res://Components/Transparency/TransparencyComponent.cs" id="1_fjwcr"]
+
+[node name="TransparencyComponent" type="Node"]
+script = ExtResource("1_fjwcr")
