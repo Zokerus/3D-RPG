@@ -75,6 +75,11 @@ public partial class player : CharacterBody3D
             LockOnTarget();
         }
 
+        if(@event.IsActionPressed("DrawWeapon"))
+        {
+            DrawWeapon();
+        }
+
         Velocity = velocity;
     }
 
@@ -237,13 +242,24 @@ public partial class player : CharacterBody3D
         }
     }
 
-    public void AddTargetToList(LockOnComponent enemy)
+    private void AddTargetToList(LockOnComponent enemy)
     {
         m_targetList.Add(enemy);
     }
 
-    public void RemoveTargetFromList(LockOnComponent enemy)
+    private void RemoveTargetFromList(LockOnComponent enemy)
     {
         m_targetList.Remove(enemy);
+    }
+
+    private void DrawWeapon()
+    {
+        m_animationTree.Set("parameters/StatusSwitch/transition_request", "OneHanded");
+        m_animationTree.Set("parameters/DrawWeapon/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
+    }
+
+    private void DrawBow()
+    {
+
     }
 }
