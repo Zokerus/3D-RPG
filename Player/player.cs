@@ -6,13 +6,13 @@ using System.Diagnostics;
 
 public partial class player : CharacterBody3D
 {
-	[Export]
+    [Export]
 	public camera_controller mainCamera;
     [Export]
     public UI GUI;
 
 	private AnimationTree m_animationTree;
-
+    private StateMachine m_stateMachine;
     private Vector3 m_movementDirection = Vector3.Zero;
 
 	private const float m_characterRotationRate = 4*Mathf.Pi;
@@ -39,6 +39,7 @@ public partial class player : CharacterBody3D
         }
 
 		m_animationTree = GetNode<AnimationTree>("AnimationTree");
+        m_stateMachine = GetNode<StateMachine>("StateMachine");
         m_recenterTimer = GetNode<Timer>("RecenterTimer");
         m_raycast = GetNode<RayCast3D>("RayCast3D");
         m_transparencyComponent = GetNode<TransparencyComponent>("TransparencyComponent");
@@ -47,62 +48,61 @@ public partial class player : CharacterBody3D
     public override void _UnhandledInput(InputEvent @event)
     {
         base._UnhandledInput(@event);
-        Vector3 velocity = Velocity;
 
         // Handle Jump.
-        if (@event.IsActionPressed("Jump") && IsOnFloor())
-            velocity.Y = m_jumpVelocity;
+        //if (@event.IsActionPressed("Jump") && IsOnFloor())
+        //    velocity.Y = m_jumpVelocity;
 
 
-        if (@event.IsActionPressed("Run", true) && IsOnFloor())
-        {
-            m_runFactor = true;
-            mainCamera.UnlockCamera();
-            m_locked = false;
-            m_recenterTimer.Stop();
-        }
-        
-        if(@event.IsActionReleased("Run",true) || !IsOnFloor())
-        {
-            m_runFactor = false;
-            mainCamera.LockCamera();
-            m_recenterTimer.Stop();
-            m_recenterTimer.Start();
-        }
+        //if (@event.IsActionPressed("Run", true) && IsOnFloor())
+        //{
+        //    m_runFactor = true;
+        //    mainCamera.UnlockCamera();
+        //    m_locked = false;
+        //    m_recenterTimer.Stop();
+        //}
 
-        if (@event.IsActionPressed("LockTarget"))
-        {
-            LockOnTarget();
-        }
+        //if(@event.IsActionReleased("Run",true) || !IsOnFloor())
+        //{
+        //    m_runFactor = false;
+        //    mainCamera.LockCamera();
+        //    m_recenterTimer.Stop();
+        //    m_recenterTimer.Start();
+        //}
 
-        if(@event.IsActionPressed("DrawWeapon"))
-        {
-            DrawWeapon();
-        }
+        //if (@event.IsActionPressed("LockTarget"))
+        //{
+        //    LockOnTarget();
+        //}
 
-        Velocity = velocity;
+        //if(@event.IsActionPressed("DrawWeapon"))
+        //{
+        //    DrawWeapon();
+        //}
+
+        //Velocity = velocity;
     }
 
     public override void _PhysicsProcess(double delta)
 	{
-        Vector3 velocity = Velocity;
+  //      Vector3 velocity = Velocity;
 
-        CalculateMovement((float)delta);
+        //      CalculateMovement((float)delta);
 
-        // Get position change based an animation (root motion)
-        Quaternion currentRotation = Transform.Basis.GetRotationQuaternion();
-        velocity = DivideByFloat(currentRotation.Normalized() * m_animationTree.GetRootMotionPosition(), (float)delta);
-		
-        // Add the gravity.
-		if (!IsOnFloor())
-			velocity.Y -= m_gravity * (float)delta;
+        //      // Get position change based an animation (root motion)
+        //      Quaternion currentRotation = Transform.Basis.GetRotationQuaternion();
+        //      velocity = DivideByFloat(currentRotation.Normalized() * m_animationTree.GetRootMotionPosition(), (float)delta);
 
-        Velocity = velocity;
-		MoveAndSlide();
-		mainCamera.GlobalPosition = this.GlobalPosition;
-        
-        this.m_transparencyComponent.CalculateTransparency(this.GlobalPosition.DistanceTo(mainCamera.Camera.GlobalPosition));
-	}
+        //      // Add the gravity.
+        //if (!IsOnFloor())
+        //	velocity.Y -= m_gravity * (float)delta;
+
+        //      Velocity = velocity;
+        //MoveAndSlide();
+        mainCamera.GlobalPosition = this.GlobalPosition;
+
+        //      this.m_transparencyComponent.CalculateTransparency(this.GlobalPosition.DistanceTo(mainCamera.Camera.GlobalPosition));
+    }
 
 	private void CalculateMovement(float delta)
 	{

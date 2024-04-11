@@ -6,18 +6,24 @@ public partial class StateMachine : Node
 	[Export]
 	public GenericState InitialState;
 
+	private CharacterBody3D m_character;
+	private AnimationTree m_animationTree;
 	private GenericState m_activeState;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		m_activeState = InitialState;
 	}
 
 	public void ParentReady()
 	{
-		foreach(GenericState state in this.GetChildren())
+		this.m_character = this.GetParent<CharacterBody3D>();
+		m_animationTree = GetNode<AnimationTree>("AnimationTree");
+		foreach (GenericState state in this.GetChildren())
 		{
 			state.m_stateMachine = this;
+			state.Init(this.m_character, this.m_animationTree);
 		}
 		m_activeState.Enter();
 	}
